@@ -21,10 +21,11 @@
         }
         .video {
             width: 300px;
+            cursor: pointer;
         }
-        iframe {
+        .video img {
             width: 100%;
-            height: 200px;
+            height: auto;
         }
     </style>
 </head>
@@ -37,7 +38,7 @@
     <div id="videos"></div>
     
     <script>
-        const API_KEY = 'AIzaSyCOEA8NV9VEeN_co8XhRqII9A1EHddaLPk';
+        const API_KEY = 'YOUR_YOUTUBE_API_KEY';
 
         function searchVideos() {
             const query = document.getElementById('search').value;
@@ -48,16 +49,22 @@
                     videoContainer.innerHTML = '';
                     data.items.forEach(item => {
                         const videoId = item.id.videoId;
+                        const thumbnailUrl = item.snippet.thumbnails.medium.url;
+                        const videoTitle = item.snippet.title;
                         const videoElement = document.createElement('div');
                         videoElement.classList.add('video');
                         videoElement.innerHTML = `
-                            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-                            <p>${item.snippet.title}</p>
+                            <img src="${thumbnailUrl}" alt="${videoTitle}" onclick="loadVideo('${videoId}', '${videoTitle}')">
+                            <p>${videoTitle}</p>
                         `;
                         videoContainer.appendChild(videoElement);
                     });
                 })
                 .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function loadVideo(videoId, title) {
+            window.location.href = `video.html?videoId=${videoId}&title=${encodeURIComponent(title)}`;
         }
     </script>
 </body>
